@@ -18,6 +18,7 @@ class ScraperSpider(scrapy.Spider):
         fees = response.css('div.coh-container.fees-funding-paragraph.fees-funding-ajax.coh-ce-2b1d158a article div.coh-container.fees-tbl-data.coh-ce-5d63392c div::text').extract()
         intake = response.css('td.coh-container.row-body.start-date-width p::text')
         course_duration = response.css('td.coh-container.row-body.attendance-width li::text')
+        requirements = ''
         try:
             requirements_initial = response.xpath('//h3[text()="Accepted Qualifications"]')[0]
             requirements = requirements_initial.xpath('..').css('li span::text')
@@ -26,7 +27,7 @@ class ScraperSpider(scrapy.Spider):
                 if not requirements:
                     requirements = requirements_initial.xpath('..').css('p::text')
         except IndexError:
-            requirements_initial = ''
+            requirements = ''
 
         course_location = response.css('h4.coh-heading.coh-ce-fb89dca7 div::text')
 
@@ -46,6 +47,9 @@ class ScraperSpider(scrapy.Spider):
             item['course_fees_int'] = ''
         item['course_intake'] = intake.extract_first().strip()
         item['course_duration'] = course_duration.extract_first().strip()
-        item['data_requirements'] = requirements.extract()
+        if requirements != '':
+            item['data_requirements'] = requirements.extract()
+        else:
+            item['data_requirements'] = requirements
         item['course_location'] = course_location.extract_first().strip()
         yield item
