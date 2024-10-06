@@ -1,4 +1,4 @@
-# Kasper Scrapy UEL
+# Scraping UEL University
 
 This project is a Scrapy-based web scraper designed to extract course information from the University of East London's website.
 
